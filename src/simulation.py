@@ -20,22 +20,49 @@ SEARCH_TYPES = [
 
 
 def random_game() -> Game:
+    """Select a random game from the database.
+
+    Returns:
+        Random Game object from GAMES_DATABASE.
+    """
     return choice(GAMES_DATABASE)
 
 
 def random_price() -> int:
+    """Generate a random game price.
+
+    Returns:
+        Random integer between 500 and 3500 rubles.
+    """
     return randint(500, 3500)
 
 
 def random_balance() -> int:
+    """Generate a random client balance.
+
+    Returns:
+        Random integer between 1000 and 7000 rubles.
+    """
     return randint(1000, 7000)
 
 
 def random_event() -> str:
+    """Select a random simulation event.
+
+    Returns:
+        Random event string from EVENTS_DATABASE.
+    """
     return choice(EVENTS_DATABASE)
 
 
 def simulate(start_games_amount: int, steps: int, random_seed: int | None = None) -> None:
+    """Run the main game store simulation.
+
+    Args:
+        start_games_amount: Initial number of games to add to store.
+        steps: Number of simulation steps to execute.
+        random_seed: Optional seed for random number generation.
+    """
     if random_seed is not None:
         seed(random_seed)
 

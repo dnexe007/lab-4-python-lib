@@ -3,6 +3,7 @@ from src.simulation import simulate
 
 
 def main() -> None:
+    """Main entry point for the game store simulation program."""
     print("💥Welcome to the game store simulation!")
 
     while True:

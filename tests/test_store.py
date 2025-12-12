@@ -3,6 +3,7 @@ from src.games_db import GAMES_DATABASE
 
 
 def test_empty_store() -> None:
+    """Test initialization and basic properties of empty store."""
     store = GameStore()
     assert len(store) == 0
     assert repr(store) == "Game store: 0 unique games (0 total copies)"
@@ -11,6 +12,7 @@ def test_empty_store() -> None:
 
 
 def test_add_and_remove_game() -> None:
+    """Test basic game addition and removal operations."""
     store = GameStore()
     game = GAMES_DATABASE[0]
 
@@ -25,6 +27,7 @@ def test_add_and_remove_game() -> None:
 
 
 def test_add_duplicate_games() -> None:
+    """Test adding multiple copies of same game updates price."""
     store = GameStore()
     game1 = GAMES_DATABASE[0]
     game2 = GAMES_DATABASE[0]
@@ -38,6 +41,7 @@ def test_add_duplicate_games() -> None:
 
 
 def test_buy_game_success_and_failure() -> None:
+    """Test game purchase with sufficient and insufficient funds."""
     store = GameStore()
     game = GAMES_DATABASE[0]
 
@@ -57,6 +61,7 @@ def test_buy_game_success_and_failure() -> None:
 
 
 def test_return_game() -> None:
+    """Test successful game return within 14-day period."""
     store = GameStore()
     game = GAMES_DATABASE[1]
 
@@ -71,6 +76,7 @@ def test_return_game() -> None:
 
 
 def test_search_functions() -> None:
+    """Test search functionality by developer, genre, and year."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[5], GAMES_DATABASE[6]]
@@ -89,6 +95,7 @@ def test_search_functions() -> None:
 
 
 def test_statistics() -> None:
+    """Test store statistics reflect correct inventory counts."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[4], GAMES_DATABASE[8]]
@@ -104,6 +111,7 @@ def test_statistics() -> None:
 
 
 def test_iterator() -> None:
+    """Test iteration over store inventory."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[1]]
@@ -117,6 +125,7 @@ def test_iterator() -> None:
 
 
 def test_complete_scenario() -> None:
+    """Test complete purchase and return scenario."""
     store = GameStore()
     game = GAMES_DATABASE[2]
 
@@ -139,6 +148,7 @@ def test_complete_scenario() -> None:
 
 
 def test_edge_cases() -> None:
+    """Test edge cases with non-existent items."""
     store = GameStore()
 
     game_from_db = GAMES_DATABASE[0]
@@ -153,6 +163,7 @@ def test_edge_cases() -> None:
 
 
 def test_return_game_failure() -> None:
+    """Test failed return due to exceeding 14-day period."""
     store = GameStore()
     game = GAMES_DATABASE[3]
 
@@ -166,6 +177,7 @@ def test_return_game_failure() -> None:
 
 
 def test_print_search_method() -> None:
+    """Test static search result display method."""
     from src.game_collection import GameCollection
 
     games = GameCollection()
@@ -182,6 +194,7 @@ def test_print_search_method() -> None:
 
 
 def test_game_database_content() -> None:
+    """Verify game database contains expected data."""
     assert len(GAMES_DATABASE) > 0
 
     game = GAMES_DATABASE[0]
@@ -193,6 +206,7 @@ def test_game_database_content() -> None:
 
 
 def test_multiple_genres_search() -> None:
+    """Test searching games across multiple genres."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[5], GAMES_DATABASE[9]]
@@ -207,6 +221,7 @@ def test_multiple_genres_search() -> None:
 
 
 def test_multiple_developers_search() -> None:
+    """Test searching games from multiple developers."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[3], GAMES_DATABASE[5]]
@@ -221,6 +236,7 @@ def test_multiple_developers_search() -> None:
 
 
 def test_multiple_years_search() -> None:
+    """Test searching games from multiple release years."""
     store = GameStore()
 
     games = [GAMES_DATABASE[0], GAMES_DATABASE[1], GAMES_DATABASE[2]]
@@ -235,6 +251,7 @@ def test_multiple_years_search() -> None:
 
 
 def test_racing_games_from_database() -> None:
+    """Test searching for racing genre games in database."""
     store = GameStore()
 
     for game in GAMES_DATABASE:
