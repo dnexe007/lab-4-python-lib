@@ -1,22 +1,14 @@
-from random import randint, choice, seed
-from src.games_db import GAMES_DATABASE
-from src.game_store import GameStore
+from random import choice
+from random import randint
+from random import seed
+
 from src.game import Game
+from src.game_store import GameStore
+from src.games_db import GAMES_DATABASE
 
-EVENTS_DATABASE = [
-    "add",
-    "remove",
-    "buy",
-    "stats",
-    "search",
-    "return"
-]
+EVENTS_DATABASE = ["add", "remove", "buy", "stats", "search", "return"]
 
-SEARCH_TYPES = [
-    "genre",
-    "year",
-    "developer"
-]
+SEARCH_TYPES = ["genre", "year", "developer"]
 
 
 def random_game() -> Game:

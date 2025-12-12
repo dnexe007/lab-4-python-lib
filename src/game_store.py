@@ -1,7 +1,13 @@
-from typing import Iterator, Union
-from src.game import Game, game_type
+from typing import Iterator
+from typing import Union
+
+from src.game import Game
+from src.game import game_type
 from src.game_collection import GameCollection
-from src.game_dict import DictByID, DictByDeveloper, DictByReleaseYear, DictByGenre
+from src.game_dict import DictByDeveloper
+from src.game_dict import DictByGenre
+from src.game_dict import DictByID
+from src.game_dict import DictByReleaseYear
 
 
 class GameStore:
@@ -87,7 +93,7 @@ class GameStore:
         """
         if game.game_id not in self.by_id:
             print(f'❌"{game.title}" remove failed:')
-            print('\t⚠️game is not in store')
+            print("\t⚠️game is not in store")
             return False
         self.by_id.remove_game(game)
         self.all_copies.remove_game(game)
@@ -115,7 +121,7 @@ class GameStore:
         """
         if days_passed > 14:
             print(f'❌"{game.title}" return failed:')
-            print('\t⚠️two weeks passed')
+            print("\t⚠️two weeks passed")
             return False
         print(f'↩️"{game.title}" returned by client. Price: {price} rub')
         self.profit -= price
@@ -153,15 +159,15 @@ class GameStore:
     def get_stats(self) -> None:
         """Display comprehensive store statistics."""
         print(
-            "📊Statistics:\n" +
-            f"\t🎮Number of games: {len(self.all_copies)}\n" +
-            f"\t🆔Unique games: {len(self.by_id)}\n" +
-            f"\t‍💻Unique developers: {len(self.by_developer)}\n" +
-            f"\t📅Unique release years: {len(self.by_release_year)}\n" +
-            f"\t🎭Unique genres: {len(self.by_genre)}\n" +
-            f"\t💰Profit: {self.profit} rub\n" +
-            f"\t✅Sold games: {self.sold_games}\n" +
-            f"\t↩️Returned games: {self.return_games}"
+            "📊Statistics:\n"
+            + f"\t🎮Number of games: {len(self.all_copies)}\n"
+            + f"\t🆔Unique games: {len(self.by_id)}\n"
+            + f"\t‍💻Unique developers: {len(self.by_developer)}\n"
+            + f"\t📅Unique release years: {len(self.by_release_year)}\n"
+            + f"\t🎭Unique genres: {len(self.by_genre)}\n"
+            + f"\t💰Profit: {self.profit} rub\n"
+            + f"\t✅Sold games: {self.sold_games}\n"
+            + f"\t↩️Returned games: {self.return_games}"
         )
 
     def search_by_genre(self, genre: str) -> bool:

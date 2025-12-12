@@ -1,9 +1,15 @@
-from typing import Dict, Iterator, TypeVar, Generic
-from src.game import game_type, Game
-from src.game_collection import GameCollection
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
+from typing import Dict
+from typing import Generic
+from typing import Iterator
+from typing import TypeVar
 
-K = TypeVar('K', str, int)
+from src.game import Game
+from src.game import game_type
+from src.game_collection import GameCollection
+
+K = TypeVar("K", str, int)
 
 
 class GameDict(ABC, Generic[K]):

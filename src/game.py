@@ -1,4 +1,5 @@
-from typing import Any, Callable
+from typing import Any
+from typing import Callable
 
 
 class Game:
@@ -48,7 +49,7 @@ class Game:
             self.developer == other.developer,
             self.release_year == other.release_year,
             self.genre == other.genre,
-            self.game_id == other.game_id
+            self.game_id == other.game_id,
         ]
         return all(matches)
 
@@ -78,7 +79,7 @@ def game_type(func: Callable) -> Callable:
             TypeError: If second argument is not a Game instance.
         """
         if len(args) > 1 and not isinstance(args[1], Game):
-            raise TypeError('Game must be of type Game')
+            raise TypeError("Game must be of type Game")
         return func(*args, **kwargs)
 
     return wrapper

@@ -1,5 +1,7 @@
 from typing import Iterator
-from src.game import game_type, Game
+
+from src.game import Game
+from src.game import game_type
 
 
 class GameCollection:
