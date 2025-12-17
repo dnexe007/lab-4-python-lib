@@ -1,18 +1,15 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Dict
-from typing import Generic
 from typing import Iterator
-from typing import TypeVar
 
 from src.game import Game
 from src.game import game_type
 from src.game_collection import GameCollection
 
-K = TypeVar("K", str, int)
 
 
-class GameDict(ABC, Generic[K]):
+class GameDict(ABC):
     """Abstract base class for dictionary-like collections of games.
 
     Organizes games by a key (either string or integer) into GameCollection instances.
@@ -20,9 +17,9 @@ class GameDict(ABC, Generic[K]):
 
     def __init__(self) -> None:
         """Initialize an empty game dictionary."""
-        self.dct: Dict[K, GameCollection] = {}
+        self._dct: Dict[int | str , GameCollection] = {}
 
-    def __getitem__(self, key: K) -> GameCollection:
+    def __getitem__(self, key: int | str) -> GameCollection:
         """Return game collection associated with the key.
 
         Args:
@@ -31,9 +28,9 @@ class GameDict(ABC, Generic[K]):
         Returns:
             GameCollection for the specified key.
         """
-        return self.dct[key]
+        return self._dct[key]
 
-    def __contains__(self, key: K) -> bool:
+    def __contains__(self, key: int | str) -> bool:
         """Check if key exists in dictionary.
 
         Args:
@@ -42,7 +39,7 @@ class GameDict(ABC, Generic[K]):
         Returns:
             True if key exists, False otherwise.
         """
-        return key in self.dct
+        return key in self._dct
 
     def __len__(self) -> int:
         """Return number of keys in dictionary.
@@ -50,15 +47,15 @@ class GameDict(ABC, Generic[K]):
         Returns:
             Count of distinct keys in dictionary.
         """
-        return len(self.dct)
+        return len(self._dct)
 
-    def __iter__(self) -> Iterator[K]:
+    def __iter__(self) -> Iterator[int | str]:
         """Return iterator over dictionary keys.
 
         Returns:
             Iterator for keys in dictionary.
         """
-        return iter(self.dct)
+        return iter(self._dct)
 
     def __repr__(self) -> str:
         """Return string representation of the dictionary.
@@ -66,7 +63,7 @@ class GameDict(ABC, Generic[K]):
         Returns:
             String representation showing class name and contents.
         """
-        return f"{self.__class__.__name__}: {self.dct}"
+        return f"{self.__class__.__name__}: {self._dct}"
 
     @game_type
     def add_game(self, game: Game) -> None:
@@ -76,9 +73,9 @@ class GameDict(ABC, Generic[K]):
             game: Game object to add.
         """
         key = self._get_key(game)
-        if key not in self.dct:
-            self.dct[key] = GameCollection()
-        self.dct[key].add_game(game)
+        if key not in self._dct:
+            self._dct[key] = GameCollection()
+        self._dct[key].add_game(game)
 
     @game_type
     def remove_game(self, game: Game) -> None:
@@ -91,14 +88,14 @@ class GameDict(ABC, Generic[K]):
             ValueError: If game is not found in dictionary.
         """
         key = self._get_key(game)
-        if key not in self.dct or game not in self.dct[key]:
+        if key not in self._dct or game not in self._dct[key]:
             raise ValueError("Game is not in dict")
 
-        self.dct[key].remove_game(game)
-        if len(self.dct[key]) == 0:
-            del self.dct[key]
+        self._dct[key].remove_game(game)
+        if len(self._dct[key]) == 0:
+            del self._dct[key]
 
-    def search(self, key: K) -> GameCollection:
+    def search(self, key: int | str) -> GameCollection:
         """Search for games by key.
 
         Args:
@@ -107,10 +104,10 @@ class GameDict(ABC, Generic[K]):
         Returns:
             GameCollection for the key, empty if key not found.
         """
-        return self.dct.get(key, GameCollection())
+        return self._dct.get(key, GameCollection())
 
     @abstractmethod
-    def _get_key(self, game: Game) -> K:
+    def _get_key(self, game: Game) -> int | str:
         """Abstract method to extract key from a game.
 
         Args:
@@ -125,7 +122,7 @@ class GameDict(ABC, Generic[K]):
         raise NotImplementedError("Must be implemented by subclass")
 
 
-class DictByID(GameDict[str]):
+class DictByID(GameDict):
     """Dictionary that organizes games by their unique ID."""
 
     def _get_key(self, game: Game) -> str:
@@ -140,7 +137,7 @@ class DictByID(GameDict[str]):
         return game.game_id
 
 
-class DictByReleaseYear(GameDict[int]):
+class DictByReleaseYear(GameDict):
     """Dictionary that organizes games by release year."""
 
     def _get_key(self, game: Game) -> int:
@@ -155,7 +152,7 @@ class DictByReleaseYear(GameDict[int]):
         return game.release_year
 
 
-class DictByDeveloper(GameDict[str]):
+class DictByDeveloper(GameDict):
     """Dictionary that organizes games by developer."""
 
     def _get_key(self, game: Game) -> str:
@@ -170,7 +167,7 @@ class DictByDeveloper(GameDict[str]):
         return game.developer
 
 
-class DictByGenre(GameDict[str]):
+class DictByGenre(GameDict):
     """Dictionary that organizes games by genre."""
 
     def _get_key(self, game: Game) -> str:

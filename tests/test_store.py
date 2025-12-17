@@ -36,8 +36,8 @@ def test_add_duplicate_games() -> None:
     store.add_game(game2, 2499)
 
     assert len(store) == 2
-    assert len(store.by_id) == 1
-    assert store.prices[game1] == 2499
+    assert len(store._by_id) == 1
+    assert store._prices[game1] == 2499
 
 
 def test_buy_game_success_and_failure() -> None:
@@ -50,14 +50,14 @@ def test_buy_game_success_and_failure() -> None:
     result = store.buy_game(game, 3000)
     assert result
     assert len(store) == 0
-    assert store.profit == 2299
-    assert store.sold_games == 1
+    assert store._profit == 2299
+    assert store._sold_games == 1
 
     store.add_game(game, 2299)
     result = store.buy_game(game, 2000)
     assert not result
     assert len(store) == 1
-    assert store.sold_games == 1
+    assert store._sold_games == 1
 
 
 def test_return_game() -> None:
@@ -66,12 +66,12 @@ def test_return_game() -> None:
     game = GAMES_DATABASE[1]
 
     store.add_game(game, 499)
-    store.profit = 1000
+    store._profit = 1000
 
     result = store.return_game(game, 499, 2)
     assert result
-    assert store.profit == 501
-    assert store.return_games == 1
+    assert store._profit == 501
+    assert store._return_games == 1
     assert len(store) == 1
 
 
@@ -104,10 +104,10 @@ def test_statistics() -> None:
         store.add_game(game, 999)
 
     assert len(store) == 3
-    assert len(store.by_id) == 3
-    assert len(store.by_developer) == 3
-    assert len(store.by_genre) == 3
-    assert len(store.by_release_year) == 2
+    assert len(store._by_id) == 3
+    assert len(store._by_developer) == 3
+    assert len(store._by_genre) == 3
+    assert len(store._by_release_year) == 2
 
 
 def test_iterator() -> None:
@@ -131,20 +131,20 @@ def test_complete_scenario() -> None:
 
     store.add_game(game, 1000)
     assert len(store) == 1
-    assert store.profit == 0
-    assert store.sold_games == 0
-    assert store.return_games == 0
+    assert store._profit == 0
+    assert store._sold_games == 0
+    assert store._return_games == 0
 
     store.buy_game(game, 1500)
     assert len(store) == 0
-    assert store.profit == 1000
-    assert store.sold_games == 1
-    assert store.return_games == 0
+    assert store._profit == 1000
+    assert store._sold_games == 1
+    assert store._return_games == 0
 
     store.return_game(game, 800, 1)
-    assert store.profit == 200
-    assert store.sold_games == 1
-    assert store.return_games == 1
+    assert store._profit == 200
+    assert store._sold_games == 1
+    assert store._return_games == 1
 
 
 def test_edge_cases() -> None:
@@ -168,12 +168,12 @@ def test_return_game_failure() -> None:
     game = GAMES_DATABASE[3]
 
     store.add_game(game, 1000)
-    store.profit = 500
+    store._profit = 500
 
     result = store.return_game(game, 1000, 15)
     assert not result
-    assert store.profit == 500
-    assert store.return_games == 0
+    assert store._profit == 500
+    assert store._return_games == 0
 
 
 def test_print_search_method() -> None:

@@ -16,7 +16,7 @@ class GameCollection:
         Args:
             lst: Optional initial list of Game objects.
         """
-        self.games: list[Game] = lst if lst is not None else []
+        self._games: list[Game] = lst if lst is not None else []
 
     def __getitem__(self, index: int) -> Game:
         """Return game at the specified index.
@@ -27,7 +27,7 @@ class GameCollection:
         Returns:
             Game object at specified index.
         """
-        return self.games[index]
+        return self._games[index]
 
     def __len__(self) -> int:
         """Return number of games in collection.
@@ -35,7 +35,7 @@ class GameCollection:
         Returns:
             Count of games in collection.
         """
-        return len(self.games)
+        return len(self._games)
 
     def __iter__(self) -> Iterator[Game]:
         """Return iterator over games in collection.
@@ -43,7 +43,7 @@ class GameCollection:
         Returns:
             Iterator for Game objects in collection.
         """
-        return iter(self.games)
+        return iter(self._games)
 
     def __repr__(self) -> str:
         """Return string representation of the collection.
@@ -51,11 +51,11 @@ class GameCollection:
         Returns:
             String representation of GameCollection.
         """
-        return f"GameCollection({self.games})"
+        return f"GameCollection({self._games})"
 
     def clear(self) -> None:
         """Remove all games from the collection."""
-        self.games.clear()
+        self._games.clear()
 
     @game_type
     def __contains__(self, game: Game) -> bool:
@@ -67,7 +67,7 @@ class GameCollection:
         Returns:
             True if game found, False otherwise.
         """
-        return game in self.games
+        return game in self._games
 
     @game_type
     def add_game(self, game: Game) -> None:
@@ -76,7 +76,7 @@ class GameCollection:
         Args:
             game: Game object to add.
         """
-        self.games.append(game)
+        self._games.append(game)
 
     @game_type
     def remove_game(self, game: Game) -> None:
@@ -88,9 +88,9 @@ class GameCollection:
         Raises:
             ValueError: If game is not in collection.
         """
-        if game not in self.games:
+        if game not in self._games:
             raise ValueError("Game is not in collection")
-        self.games.remove(game)
+        self._games.remove(game)
 
     @game_type
     def index(self, game: Game) -> int:
@@ -102,4 +102,4 @@ class GameCollection:
         Returns:
             Index position of game in collection.
         """
-        return self.games.index(game)
+        return self._games.index(game)

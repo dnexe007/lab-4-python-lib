@@ -1,5 +1,4 @@
 from typing import Iterator
-from typing import Union
 
 from src.game import Game
 from src.game import game_type
@@ -18,15 +17,15 @@ class GameStore:
 
     def __init__(self) -> None:
         """Initialize game store with empty collections and statistics."""
-        self.all_copies: GameCollection = GameCollection()
-        self.by_id: DictByID = DictByID()
-        self.by_developer: DictByDeveloper = DictByDeveloper()
-        self.by_release_year: DictByReleaseYear = DictByReleaseYear()
-        self.by_genre: DictByGenre = DictByGenre()
-        self.prices: dict[Game, int] = {}
-        self.profit: int = 0
-        self.sold_games = 0
-        self.return_games = 0
+        self._all_copies: GameCollection = GameCollection()
+        self._by_id: DictByID = DictByID()
+        self._by_developer: DictByDeveloper = DictByDeveloper()
+        self._by_release_year: DictByReleaseYear = DictByReleaseYear()
+        self._by_genre: DictByGenre = DictByGenre()
+        self._prices: dict[Game, int] = {}
+        self._profit: int = 0
+        self._sold_games = 0
+        self._return_games = 0
 
     def __len__(self) -> int:
         """Return total number of game copies in store.
@@ -34,7 +33,7 @@ class GameStore:
         Returns:
             Count of all game copies in inventory.
         """
-        return len(self.all_copies)
+        return len(self._all_copies)
 
     def __contains__(self, game: Game) -> bool:
         """Check if specific game copy exists in store.
@@ -45,7 +44,7 @@ class GameStore:
         Returns:
             True if game exists in store, False otherwise.
         """
-        return game in self.all_copies
+        return game in self._all_copies
 
     def __iter__(self) -> Iterator[Game]:
         """Return iterator over all game copies in store.
@@ -53,7 +52,7 @@ class GameStore:
         Returns:
             Iterator for all Game objects in inventory.
         """
-        return iter(self.all_copies)
+        return iter(self._all_copies)
 
     def __repr__(self) -> str:
         """Return summary of store inventory.
@@ -61,8 +60,8 @@ class GameStore:
         Returns:
             String with unique game count and total copies count.
         """
-        unique_games = len(self.by_id)
-        total_copies = len(self.all_copies)
+        unique_games = len(self._by_id)
+        total_copies = len(self._all_copies)
         return f"Game store: {unique_games} unique games ({total_copies} total copies)"
 
     def add_game(self, game: Game, price: int) -> None:
@@ -72,12 +71,12 @@ class GameStore:
             game: Game object to add.
             price: Price in rubles for the game.
         """
-        self.all_copies.add_game(game)
-        self.by_id.add_game(game)
-        self.by_developer.add_game(game)
-        self.by_release_year.add_game(game)
-        self.by_genre.add_game(game)
-        self.prices[game] = price
+        self._all_copies.add_game(game)
+        self._by_id.add_game(game)
+        self._by_developer.add_game(game)
+        self._by_release_year.add_game(game)
+        self._by_genre.add_game(game)
+        self._prices[game] = price
         print(f'📦"{game.title}" added. New price: {price} rub')
 
     @game_type
@@ -91,19 +90,19 @@ class GameStore:
         Returns:
             True if removal successful, False if game not found.
         """
-        if game.game_id not in self.by_id:
+        if game.game_id not in self._by_id:
             print(f'❌"{game.title}" remove failed:')
             print("\t⚠️game is not in store")
             return False
-        self.by_id.remove_game(game)
-        self.all_copies.remove_game(game)
-        self.by_developer.remove_game(game)
-        self.by_release_year.remove_game(game)
-        self.by_genre.remove_game(game)
+        self._by_id.remove_game(game)
+        self._all_copies.remove_game(game)
+        self._by_developer.remove_game(game)
+        self._by_release_year.remove_game(game)
+        self._by_genre.remove_game(game)
         if print_log:
             print(f'🚫copy of "{game.title}" removed from sale.')
-        if game.game_id not in self.by_id:
-            del self.prices[game]
+        if game.game_id not in self._by_id:
+            del self._prices[game]
             print(f'⛔️"{game.title}" is out of stock.')
         return True
 
@@ -124,8 +123,8 @@ class GameStore:
             print("\t⚠️two weeks passed")
             return False
         print(f'↩️"{game.title}" returned by client. Price: {price} rub')
-        self.profit -= price
-        self.return_games += 1
+        self._profit -= price
+        self._return_games += 1
         return True
 
     @game_type
@@ -139,12 +138,12 @@ class GameStore:
         Returns:
             True if purchase successful, False if failed.
         """
-        if game.game_id not in self.by_id:
+        if game.game_id not in self._by_id:
             print(f'❌"{game.title}" sell failed:')
             print("\t⚠️Game is not in store")
             return False
 
-        price = self.prices[game]
+        price = self._prices[game]
         if client_balance < price:
             print(f'❌"{game.title}" sell failed:')
             print(f"\t⚠️Not enough money ({client_balance} rub of {price} rub)")
@@ -152,22 +151,22 @@ class GameStore:
 
         print(f'✅"{game.title}" sold for {price} rub')
         self.remove_game(game, False)
-        self.profit += price
-        self.sold_games += 1
+        self._profit += price
+        self._sold_games += 1
         return True
 
     def get_stats(self) -> None:
         """Display comprehensive store statistics."""
         print(
             "📊Statistics:\n"
-            + f"\t🎮Number of games: {len(self.all_copies)}\n"
-            + f"\t🆔Unique games: {len(self.by_id)}\n"
-            + f"\t‍💻Unique developers: {len(self.by_developer)}\n"
-            + f"\t📅Unique release years: {len(self.by_release_year)}\n"
-            + f"\t🎭Unique genres: {len(self.by_genre)}\n"
-            + f"\t💰Profit: {self.profit} rub\n"
-            + f"\t✅Sold games: {self.sold_games}\n"
-            + f"\t↩️Returned games: {self.return_games}"
+            + f"\t🎮Number of games: {len(self._all_copies)}\n"
+            + f"\t🆔Unique games: {len(self._by_id)}\n"
+            + f"\t‍💻Unique developers: {len(self._by_developer)}\n"
+            + f"\t📅Unique release years: {len(self._by_release_year)}\n"
+            + f"\t🎭Unique genres: {len(self._by_genre)}\n"
+            + f"\t💰Profit: {self._profit} rub\n"
+            + f"\t✅Sold games: {self._sold_games}\n"
+            + f"\t↩️Returned games: {self._return_games}"
         )
 
     def search_by_genre(self, genre: str) -> bool:
@@ -180,8 +179,8 @@ class GameStore:
             True if games found, False otherwise.
         """
         result = GameCollection()
-        if genre in self.by_genre:
-            result = self.by_genre[genre]
+        if genre in self._by_genre:
+            result = self._by_genre[genre]
         self.print_search(result, "genre", genre)
         return len(result) != 0
 
@@ -195,8 +194,8 @@ class GameStore:
             True if games found, False otherwise.
         """
         result = GameCollection()
-        if release_year in self.by_release_year:
-            result = self.by_release_year[release_year]
+        if release_year in self._by_release_year:
+            result = self._by_release_year[release_year]
         self.print_search(result, "release year", release_year)
         return len(result) != 0
 
@@ -210,13 +209,13 @@ class GameStore:
             True if games found, False otherwise.
         """
         result = GameCollection()
-        if developer in self.by_developer:
-            result = self.by_developer[developer]
+        if developer in self._by_developer:
+            result = self._by_developer[developer]
         self.print_search(result, "developer", developer)
         return len(result) != 0
 
     @staticmethod
-    def print_search(found_games: GameCollection, search_type: str, value: Union[str, int]) -> bool:
+    def print_search(found_games: GameCollection, search_type: str, value: str | int) -> bool:
         """Display search results in formatted output.
 
         Args:
